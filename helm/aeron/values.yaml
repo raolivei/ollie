@@ -1,0 +1,74 @@
+global:
+  storageClass: "local-path"  # k3s default
+
+whisper:
+  image:
+    repository: ghcr.io/raolivei/aeron-whisper
+    tag: latest
+    pullPolicy: IfNotPresent
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "500m"
+    limits:
+      memory: "2Gi"
+      cpu: "2000m"
+
+ollama:
+  image:
+    repository: ghcr.io/raolivei/aeron-ollama
+    tag: latest
+    pullPolicy: IfNotPresent
+  resources:
+    requests:
+      memory: "4Gi"
+      cpu: "1000m"
+    limits:
+      memory: "6Gi"  # 8GB Pi, leave room for OS
+      cpu: "4000m"
+  storage:
+    size: "10Gi"
+
+tts:
+  image:
+    repository: ghcr.io/raolivei/aeron-tts
+    tag: latest
+    pullPolicy: IfNotPresent
+  resources:
+    requests:
+      memory: "1Gi"
+      cpu: "500m"
+    limits:
+      memory: "2Gi"
+      cpu: "2000m"
+
+core:
+  image:
+    repository: ghcr.io/raolivei/aeron-core
+    tag: latest
+    pullPolicy: IfNotPresent
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+
+ui:
+  image:
+    repository: ghcr.io/raolivei/aeron-ui
+    tag: latest
+    pullPolicy: IfNotPresent
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+  service:
+    type: NodePort
+    port: 8501
+    nodePort: 30001
+

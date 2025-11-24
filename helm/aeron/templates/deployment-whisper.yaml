@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-whisper
+  labels:
+    app: aeron
+    component: whisper
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aeron
+      component: whisper
+  template:
+    metadata:
+      labels:
+        app: aeron
+        component: whisper
+    spec:
+      containers:
+        - name: whisper
+          image: "{{ .Values.whisper.image.repository }}:{{ .Values.whisper.image.tag }}"
+          imagePullPolicy: {{ .Values.whisper.image.pullPolicy }}
+          ports:
+            - containerPort: 8000
+          resources:
+            {{- toYaml .Values.whisper.resources | nindent 12 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: whisper
+spec:
+  selector:
+    app: aeron
+    component: whisper
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+

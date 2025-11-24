@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-core
+  labels:
+    app: aeron
+    component: core
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aeron
+      component: core
+  template:
+    metadata:
+      labels:
+        app: aeron
+        component: core
+    spec:
+      containers:
+        - name: core
+          image: "{{ .Values.core.image.repository }}:{{ .Values.core.image.tag }}"
+          imagePullPolicy: {{ .Values.core.image.pullPolicy }}
+          ports:
+            - containerPort: 8000
+          env:
+            - name: WHISPER_URL
+              value: "http://whisper:8000"
+            - name: OLLAMA_URL
+              value: "http://ollama:11434"
+            - name: TTS_URL
+              value: "http://tts:8000"
+          resources:
+            {{- toYaml .Values.core.resources | nindent 12 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: core
+spec:
+  selector:
+    app: aeron
+    component: core
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+
