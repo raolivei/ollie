@@ -23,8 +23,15 @@ spec:
           imagePullPolicy: {{ .Values.whisper.image.pullPolicy }}
           ports:
             - containerPort: 8000
+          volumeMounts:
+            - name: data-storage
+              mountPath: /data
           resources:
             {{- toYaml .Values.whisper.resources | nindent 12 }}
+      volumes:
+        - name: data-storage
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-data-pvc
 ---
 apiVersion: v1
 kind: Service
@@ -38,4 +45,3 @@ spec:
     - protocol: TCP
       port: 8000
       targetPort: 8000
-

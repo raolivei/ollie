@@ -148,10 +148,6 @@ SYSTEM You are Aeron, a helpful AI assistant.
     print(f"Created Modelfile at {modelfile_path}")
     print("To apply: ollama create aeron-lora -f Modelfile")
     
-    # We can try to run it via curl/requests to Ollama API
-    # But Ollama might not have access to this path unless mounted.
-    # Ollama pod has /data mounted? Not yet in deployment-ollama.yaml!
-    
     reload_ollama_model(modelfile_content)
 
 def reload_ollama_model(modelfile_content):
@@ -182,4 +178,3 @@ def reload_ollama_model(modelfile_content):
 
 if __name__ == "__main__":
     train()
-

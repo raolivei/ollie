@@ -33,6 +33,15 @@ sentence-transformers = "^3.0.1"
 streamlit = "^1.36.0"
 watchdog = "^4.0.1"
 
+[tool.poetry.group.training.dependencies]
+transformers = "^4.40.0"
+peft = "^0.10.0"
+trl = "^0.8.0"
+datasets = "^2.19.0"
+bitsandbytes = "^0.43.0"
+scipy = "^1.13.0"
+torch = "^2.3.0" 
+
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.2"
 ruff = "^0.4.10"

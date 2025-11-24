@@ -1,6 +1,11 @@
 global:
   storageClass: "local-path"  # k3s default
 
+persistence:
+  data:
+    size: "20Gi"
+    accessMode: ReadWriteOnce
+
 whisper:
   image:
     repository: ghcr.io/raolivei/aeron-whisper
@@ -72,3 +77,16 @@ ui:
     port: 8501
     nodePort: 30001
 
+training:
+  image:
+    repository: ghcr.io/raolivei/aeron-training
+    tag: latest
+    pullPolicy: IfNotPresent
+  schedule: "0 2 * * *" # Daily at 2 AM
+  resources:
+    requests:
+      memory: "2Gi"
+      cpu: "1000m"
+    limits:
+      memory: "4Gi"
+      cpu: "4000m"

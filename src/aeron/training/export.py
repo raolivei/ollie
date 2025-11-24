@@ -62,4 +62,3 @@ def export_daily_conversations(output_file: str = "/data/training/daily_data.jso
 
 if __name__ == "__main__":
     export_daily_conversations()
-

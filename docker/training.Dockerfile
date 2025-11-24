@@ -31,4 +31,3 @@ COPY src/ /app/src/
 ENV PYTHONPATH=/app/src
 
 CMD ["python", "/app/src/aeron/training/train.py"]
-

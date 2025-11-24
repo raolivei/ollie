@@ -16,8 +16,6 @@ RUN pip install poetry && \
 
 # Copy application code
 COPY src/ /app/src/
-
-# Set PYTHONPATH
 ENV PYTHONPATH=/app/src
 
 # Expose port

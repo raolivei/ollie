@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  core:
+    image: ghcr.io/raolivei/aeron-core
+    environment:
+      - WHISPER_URL=http://whisper:8000
+      - OLLAMA_URL=http://ollama:11434
+      - TTS_URL=http://tts:8000
+      - DATA_DIR=/data
+    volumes:
+      - ./data:/data
+    ports:
+      - "8000:8000"
+    depends_on:
+      - whisper
+      - ollama
+
+  whisper:
+    image: ghcr.io/raolivei/aeron-whisper
+    volumes:
+      - ./data:/data
+
+  ollama:
+    image: ghcr.io/raolivei/aeron-ollama
+    volumes:
+      - ./data:/data
+      - ollama_storage:/root/.ollama
+    ports:
+      - "11434:11434"
+
+  ui:
+    image: ghcr.io/raolivei/aeron-ui
+    environment:
+      - AERON_API_URL=http://core:8000
+    ports:
+      - "8501:8501"
+    depends_on:
+      - core
+
+volumes:
+  ollama_storage:
+

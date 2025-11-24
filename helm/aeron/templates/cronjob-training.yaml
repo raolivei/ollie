@@ -36,4 +36,3 @@ spec:
             - name: data-storage
               persistentVolumeClaim:
                 claimName: {{ .Release.Name }}-data-pvc
-

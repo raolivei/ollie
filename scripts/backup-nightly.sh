@@ -21,8 +21,19 @@ if [ -d "/data/audio" ]; then
     rsync -av /data/audio "$BACKUP_DIR/"
 fi
 
+# Backup ChromaDB
+if [ -d "/data/chroma" ]; then
+    echo "Backing up ChromaDB..."
+    rsync -av /data/chroma "$BACKUP_DIR/"
+fi
+
+# Backup LoRA Adapters
+if [ -d "/data/models/adapters" ]; then
+    echo "Backing up LoRA adapters..."
+    rsync -av /data/models/adapters "$BACKUP_DIR/"
+fi
+
 # Prune old backups (keep last 30 days)
 find "$BACKUP_ROOT" -maxdepth 1 -type d -mtime +30 -exec rm -rf {} +
 
 echo "Backup complete: $BACKUP_DIR"
-

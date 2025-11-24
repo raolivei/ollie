@@ -26,12 +26,17 @@ spec:
           volumeMounts:
             - name: ollama-storage
               mountPath: /root/.ollama
+            - name: data-storage
+              mountPath: /data
           resources:
             {{- toYaml .Values.ollama.resources | nindent 12 }}
       volumes:
         - name: ollama-storage
           persistentVolumeClaim:
             claimName: {{ .Release.Name }}-ollama-pvc
+        - name: data-storage
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-data-pvc
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -57,4 +62,3 @@ spec:
     - protocol: TCP
       port: 11434
       targetPort: 11434
-
