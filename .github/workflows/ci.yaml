@@ -35,8 +35,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-poetry-
 
-      - name: Install dependencies
-        run: poetry install --no-interaction
+      - name: Install dependencies (without capture group)
+        run: poetry install --no-interaction --without capture
 
       - name: Run Ruff (Lint)
         run: poetry run ruff check .

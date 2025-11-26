@@ -92,9 +92,13 @@ async def chat(req: ChatRequest):
     """
     
     # 2. Call LLM (Ollama)
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(timeout=60.0) as client:
+        # Use tinyllama for local testing if memory is constrained
+        # In production, this should be llama3.1:8b
+        model_name = os.getenv("OLLAMA_MODEL", "llama3.1:8b")
+        
         payload = {
-            "model": "llama3.1:8b",
+            "model": model_name,
             "messages": [
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": req.message}
@@ -105,6 +109,16 @@ async def chat(req: ChatRequest):
             resp = await client.post(f"{OLLAMA_URL}/api/chat", json=payload)
             resp.raise_for_status()
             llm_response = resp.json()["message"]["content"]
+        except httpx.HTTPStatusError as e:
+            if e.response.status_code == 500:
+                 # Fallback to tinyllama if OOM
+                 print("Main model failed (likely OOM), retrying with tinyllama...")
+                 payload["model"] = "tinyllama"
+                 resp = await client.post(f"{OLLAMA_URL}/api/chat", json=payload)
+                 resp.raise_for_status()
+                 llm_response = resp.json()["message"]["content"]
+            else:
+                raise HTTPException(status_code=e.response.status_code, detail=f"LLM Error: {str(e)}")
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"LLM Error: {str(e)}")
 

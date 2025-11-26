@@ -17,7 +17,7 @@ requests = "^2.32.0"
 faster-whisper = "^1.0.3"
 
 [tool.poetry.group.capture.dependencies]
-pyaudio = "^0.2.14"
+pyaudio = {version = "^0.2.14", optional = true}
 webrtcvad = "^2.0.10"
 
 [tool.poetry.group.tts.dependencies]
