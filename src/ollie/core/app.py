@@ -7,11 +7,11 @@ import uuid
 from datetime import datetime
 from typing import List, Optional
 
-from aeron.memory.retrieval import MemorySystem
-from aeron.storage.database import get_db, init_db
-from aeron.storage.models import Session, Conversation
+from ollie.memory.retrieval import MemorySystem
+from ollie.storage.database import get_db, init_db
+from ollie.storage.models import Session, Conversation
 
-app = FastAPI(title="Aeron Core")
+app = FastAPI(title="Ollie Core")
 
 # Service URLs
 WHISPER_URL = os.getenv("WHISPER_URL", "http://whisper:8000")
@@ -84,7 +84,7 @@ async def chat(req: ChatRequest):
     context_docs = memory_system.search_memory(req.message, n_results=3)
     context_str = "\n".join([d["content"] for d in context_docs])
     
-    system_prompt = f"""You are Aeron, a helpful AI assistant. 
+    system_prompt = f"""You are Ollie, a helpful AI assistant. 
     Use the following context from past conversations to answer the user's question if relevant.
     
     Context:
@@ -144,7 +144,7 @@ async def chat(req: ChatRequest):
         # Save AI Response
         ai_conv = Conversation(
             session_id=session_id,
-            speaker="Aeron",
+            speaker="Ollie",
             transcript=llm_response,
             timestamp=datetime.utcnow()
         )
@@ -206,9 +206,9 @@ async def status():
             resp = await client.get(f"{OLLAMA_URL}/api/tags")
             if resp.status_code == 200:
                 models = resp.json().get("models", [])
-                # Look for aeron-lora
+                # Look for ollie-lora
                 for m in models:
-                    if m["name"].startswith("aeron-lora"):
+                    if m["name"].startswith("ollie-lora"):
                         model_version = m["name"]
                         break
     except:

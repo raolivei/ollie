@@ -3,18 +3,18 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}-ollama
   labels:
-    app: aeron
+    app: ollie
     component: ollama
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: aeron
+      app: ollie
       component: ollama
   template:
     metadata:
       labels:
-        app: aeron
+        app: ollie
         component: ollama
     spec:
       containers:
@@ -56,7 +56,7 @@ metadata:
   name: ollama
 spec:
   selector:
-    app: aeron
+    app: ollie
     component: ollama
   ports:
     - protocol: TCP

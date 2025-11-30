@@ -1,18 +1,18 @@
 #!/bin/bash
 
-# Backup script for Aeron data
+# Backup script for Ollie data
 # Usage: ./backup-nightly.sh
 
-BACKUP_ROOT="/mnt/external_ssd/backups/aeron"
+BACKUP_ROOT="/mnt/external_ssd/backups/ollie"
 DATE=$(date +%Y%m%d_%H%M%S)
 BACKUP_DIR="$BACKUP_ROOT/$DATE"
 
 mkdir -p "$BACKUP_DIR"
 
 # Backup SQLite DB
-if [ -f "/data/aeron.db" ]; then
+if [ -f "/data/ollie.db" ]; then
     echo "Backing up database..."
-    cp /data/aeron.db "$BACKUP_DIR/"
+    cp /data/ollie.db "$BACKUP_DIR/"
 fi
 
 # Backup Audio files

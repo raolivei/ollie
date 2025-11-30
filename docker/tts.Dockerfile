@@ -32,4 +32,4 @@ ENV PYTHONPATH=/app/src
 EXPOSE 8000
 
 # Run the service
-CMD ["uvicorn", "aeron.tts.api:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "ollie.tts.api:app", "--host", "0.0.0.0", "--port", "8000"]

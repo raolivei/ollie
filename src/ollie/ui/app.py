@@ -4,14 +4,14 @@ import os
 from datetime import datetime
 
 # Configuration
-API_URL = os.getenv("AERON_API_URL", "http://core:8000")
+API_URL = os.getenv("OLLIE_API_URL", "http://core:8000")
 # If running locally (not in docker), use localhost
-if os.getenv("AERON_ENV") == "dev":
+if os.getenv("OLLIE_ENV") == "dev":
     API_URL = "http://localhost:8000"
 
-st.set_page_config(page_title="Aeron", page_icon="🧠", layout="wide")
+st.set_page_config(page_title="Ollie", page_icon="🧠", layout="wide")
 
-st.title("Aeron 🧠")
+st.title("Ollie 🧠")
 
 # Sidebar for navigation
 page = st.sidebar.selectbox("Navigation", ["Chat", "Voice", "History", "Settings"])
@@ -100,7 +100,7 @@ if page == "Chat":
                      st.error(f"Error: {resp.status_code} - {resp.text}")
                 
         except Exception as e:
-            st.error(f"Error communicating with Aeron Core: {e}")
+            st.error(f"Error communicating with Ollie Core: {e}")
 
 
 elif page == "Voice":

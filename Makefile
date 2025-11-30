@@ -20,12 +20,12 @@ clean:
 	find . -type f -name "*.pyc" -delete
 
 build:
-	docker build -t ghcr.io/raolivei/aeron-whisper -f docker/whisper.Dockerfile .
-	docker build -t ghcr.io/raolivei/aeron-ollama -f docker/ollama.Dockerfile .
-	docker build -t ghcr.io/raolivei/aeron-tts -f docker/tts.Dockerfile .
-	docker build -t ghcr.io/raolivei/aeron-core -f docker/core.Dockerfile .
-	docker build -t ghcr.io/raolivei/aeron-ui -f docker/ui.Dockerfile .
-	docker build -t ghcr.io/raolivei/aeron-training -f docker/training.Dockerfile .
+	docker build -t ghcr.io/raolivei/ollie-whisper -f docker/whisper.Dockerfile .
+	docker build -t ghcr.io/raolivei/ollie-ollama -f docker/ollama.Dockerfile .
+	docker build -t ghcr.io/raolivei/ollie-tts -f docker/tts.Dockerfile .
+	docker build -t ghcr.io/raolivei/ollie-core -f docker/core.Dockerfile .
+	docker build -t ghcr.io/raolivei/ollie-ui -f docker/ui.Dockerfile .
+	docker build -t ghcr.io/raolivei/ollie-training -f docker/training.Dockerfile .
 
 deploy:
-	helm upgrade --install aeron helm/aeron --namespace aeron --create-namespace
+	helm upgrade --install ollie helm/ollie --namespace ollie --create-namespace

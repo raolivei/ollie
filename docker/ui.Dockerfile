@@ -25,4 +25,4 @@ ENV PYTHONPATH=/app/src
 EXPOSE 8501
 
 # Run Streamlit
-CMD ["streamlit", "run", "src/aeron/ui/app.py", "--server.address=0.0.0.0"]
+CMD ["streamlit", "run", "src/ollie/ui/app.py", "--server.address=0.0.0.0"]

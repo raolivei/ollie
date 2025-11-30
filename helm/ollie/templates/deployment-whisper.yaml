@@ -3,18 +3,18 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}-whisper
   labels:
-    app: aeron
+    app: ollie
     component: whisper
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: aeron
+      app: ollie
       component: whisper
   template:
     metadata:
       labels:
-        app: aeron
+        app: ollie
         component: whisper
     spec:
       containers:
@@ -39,7 +39,7 @@ metadata:
   name: whisper
 spec:
   selector:
-    app: aeron
+    app: ollie
     component: whisper
   ports:
     - protocol: TCP

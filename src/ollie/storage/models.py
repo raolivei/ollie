@@ -22,7 +22,7 @@ class Conversation(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     session_id: Mapped[int] = mapped_column(ForeignKey("sessions.id"))
     timestamp: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
-    speaker: Mapped[str] = mapped_column(String(50))  # "User", "Aeron"
+    speaker: Mapped[str] = mapped_column(String(50))  # "User", "Ollie"
     transcript: Mapped[str] = mapped_column(Text)
     audio_path: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
     embedding_id: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)  # ChromaDB ID

@@ -5,7 +5,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 from peft import LoraConfig, get_peft_model, TaskType
 from datasets import load_dataset
 from trl import SFTTrainer, SFTConfig
-from aeron.training.export import export_daily_conversations
+from ollie.training.export import export_daily_conversations
 import subprocess
 
 # Configuration
@@ -138,7 +138,7 @@ def create_ollama_modelfile(adapter_gguf_path):
     modelfile_content = f"""
 FROM llama3.1:8b
 ADAPTER {adapter_gguf_path}
-SYSTEM You are Aeron, a helpful AI assistant.
+SYSTEM You are Ollie, a helpful AI assistant.
 """
     
     modelfile_path = f"{os.path.dirname(adapter_gguf_path)}/Modelfile"
@@ -146,7 +146,7 @@ SYSTEM You are Aeron, a helpful AI assistant.
         f.write(modelfile_content)
         
     print(f"Created Modelfile at {modelfile_path}")
-    print("To apply: ollama create aeron-lora -f Modelfile")
+    print("To apply: ollama create ollie-lora -f Modelfile")
     
     reload_ollama_model(modelfile_content)
 
@@ -160,7 +160,7 @@ def reload_ollama_model(modelfile_content):
         resp = requests.post(
             f"{ollama_host}/api/create",
             json={
-                "name": "aeron-lora",
+                "name": "ollie-lora",
                 "modelfile": modelfile_content
             },
             stream=True
@@ -171,7 +171,7 @@ def reload_ollama_model(modelfile_content):
             if line:
                 print(f"Ollama: {line.decode('utf-8')}")
                 
-        print("Model aeron-lora created/updated successfully.")
+        print("Model ollie-lora created/updated successfully.")
         
     except Exception as e:
         print(f"Failed to reload Ollama model: {e}")

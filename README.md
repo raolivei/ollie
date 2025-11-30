@@ -1,10 +1,11 @@
-# Aeron
+# Ollie
 
-A local AI that captures conversations, stores them permanently, and uses RAG-based memory retrieval.
+Local AI with total recall
+Captures conversations, stores them permanently, and uses RAG-based memory retrieval.
 
 ## Overview
 
-Aeron is designed to be a "second brain" that runs entirely locally on a Raspberry Pi cluster (or similar hardware). It listens to audio, transcribes it, stores it, and allows you to query your past conversations using an LLM with RAG memory.
+Ollie is designed to be a "second brain" that runs entirely locally on a Raspberry Pi cluster (or similar hardware). It listens to audio, transcribes it, stores it, and allows you to query your past conversations using an LLM with RAG memory.
 
 ## Architecture
 
@@ -29,7 +30,7 @@ Aeron is designed to be a "second brain" that runs entirely locally on a Raspber
 1. **Clone the repository:**
    ```bash
    git clone <repo-url>
-   cd aeron
+   cd ollie
    ```
 
 2. **Install dependencies:**

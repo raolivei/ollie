@@ -20,9 +20,9 @@ RUN git clone https://github.com/ggerganov/llama.cpp /app/llama.cpp && \
     cd /app/llama.cpp && \
     pip install -r requirements.txt
 
-# Copy Aeron code
+# Copy Ollie code
 COPY pyproject.toml ./
-# We might need to install aeron deps too if we import from it
+# We might need to install ollie deps too if we import from it
 RUN pip install poetry && \
     poetry config virtualenvs.create false && \
     poetry install --only main --no-root
@@ -30,4 +30,4 @@ RUN pip install poetry && \
 COPY src/ /app/src/
 ENV PYTHONPATH=/app/src
 
-CMD ["python", "/app/src/aeron/training/train.py"]
+CMD ["python", "/app/src/ollie/training/train.py"]

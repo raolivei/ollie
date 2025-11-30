@@ -1,10 +1,10 @@
-# Aeron Master Plan
+# Ollie Master Plan
 
 ## Model Preference
 **CRITICAL**: This project is being written with **gemini-3-pro**. Give preference to this model for all code generation, planning, and reasoning tasks within this project.
 
 ## Project Overview
-Aeron is a local AI that captures conversations, stores them permanently, and uses RAG-based memory retrieval. It is designed to run on a Raspberry Pi cluster.
+Ollie is a local AI that captures conversations, stores them permanently, and uses RAG-based memory retrieval. It is designed to run on a Raspberry Pi cluster.
 
 ## Phase 1: Core Infrastructure Setup
 

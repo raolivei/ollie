@@ -3,18 +3,18 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}-ui
   labels:
-    app: aeron
+    app: ollie
     component: ui
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: aeron
+      app: ollie
       component: ui
   template:
     metadata:
       labels:
-        app: aeron
+        app: ollie
         component: ui
     spec:
       containers:
@@ -24,7 +24,7 @@ spec:
           ports:
             - containerPort: 8501
           env:
-            - name: AERON_API_URL
+            - name: OLLIE_API_URL
               value: "http://core:8000"
           resources:
             {{- toYaml .Values.ui.resources | nindent 12 }}
@@ -36,7 +36,7 @@ metadata:
 spec:
   type: {{ .Values.ui.service.type }}
   selector:
-    app: aeron
+    app: ollie
     component: ui
   ports:
     - protocol: TCP

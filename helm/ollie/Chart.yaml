@@ -1,6 +1,6 @@
 apiVersion: v2
-name: aeron
-description: A Helm chart for Aeron Local AI
+name: ollie
+description: A Helm chart for Ollie Local AI
 type: application
 version: 0.1.0
 appVersion: "0.1.0"

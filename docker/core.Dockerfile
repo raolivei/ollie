@@ -22,4 +22,4 @@ ENV PYTHONPATH=/app/src
 EXPOSE 8000
 
 # Run the service
-CMD ["uvicorn", "aeron.core.app:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "ollie.core.app:app", "--host", "0.0.0.0", "--port", "8000"]

@@ -3,8 +3,8 @@ import os
 from datetime import datetime, timedelta
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import sessionmaker
-from aeron.storage.models import Conversation
-from aeron.storage.database import DB_URL
+from ollie.storage.models import Conversation
+from ollie.storage.database import DB_URL
 
 def export_daily_conversations(output_file: str = "/data/training/daily_data.jsonl"):
     """Export conversations from the last 24 hours to JSONL."""
@@ -17,7 +17,7 @@ def export_daily_conversations(output_file: str = "/data/training/daily_data.jso
     since = datetime.utcnow() - timedelta(days=1)
     
     # Get conversations
-    # We want pairs of User -> Aeron
+    # We want pairs of User -> Ollie
     # This is tricky if they are just a stream. 
     # We'll look for sessions and reconstruct the dialogue.
     

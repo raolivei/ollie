@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: {{ .Release.Name }}-training
   labels:
-    app: aeron
+    app: ollie
     component: training
 spec:
   schedule: "{{ .Values.training.schedule }}"
@@ -12,7 +12,7 @@ spec:
       template:
         metadata:
           labels:
-            app: aeron
+            app: ollie
             component: training
         spec:
           restartPolicy: OnFailure

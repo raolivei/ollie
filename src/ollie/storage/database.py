@@ -6,7 +6,7 @@ from sqlalchemy.orm import sessionmaker, Session
 from .models import Base
 
 # Default path for SQLite DB, can be overridden by env var
-DEFAULT_DB_PATH = Path("/data/aeron.db")
+DEFAULT_DB_PATH = Path("/data/ollie.db")
 DB_URL = os.getenv("DATABASE_URL", f"sqlite:///{DEFAULT_DB_PATH}")
 
 engine = create_engine(DB_URL, connect_args={"check_same_thread": False})

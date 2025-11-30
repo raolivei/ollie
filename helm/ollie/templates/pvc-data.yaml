@@ -3,7 +3,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: {{ .Release.Name }}-data-pvc
   labels:
-    app: aeron
+    app: ollie
     component: storage
 spec:
   accessModes:

@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: docker/core.Dockerfile
-    image: ghcr.io/raolivei/aeron-core
+    image: ghcr.io/raolivei/ollie-core
     environment:
       - WHISPER_URL=http://whisper:8000
       - OLLAMA_URL=http://ollama:11434
@@ -23,7 +23,7 @@ services:
     build:
       context: .
       dockerfile: docker/whisper.Dockerfile
-    image: ghcr.io/raolivei/aeron-whisper
+    image: ghcr.io/raolivei/ollie-whisper
     volumes:
       - ./data:/data
 
@@ -31,7 +31,7 @@ services:
     build:
       context: .
       dockerfile: docker/ollama.Dockerfile
-    image: ghcr.io/raolivei/aeron-ollama
+    image: ghcr.io/raolivei/ollie-ollama
     volumes:
       - ./data:/data
       - ollama_storage:/root/.ollama
@@ -42,9 +42,9 @@ services:
     build:
       context: .
       dockerfile: docker/ui.Dockerfile
-    image: ghcr.io/raolivei/aeron-ui
+    image: ghcr.io/raolivei/ollie-ui
     environment:
-      - AERON_API_URL=http://core:8000
+      - OLLIE_API_URL=http://core:8000
     ports:
       - "8501:8501"
     depends_on:

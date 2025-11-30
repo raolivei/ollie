@@ -8,7 +8,7 @@ persistence:
 
 whisper:
   image:
-    repository: ghcr.io/raolivei/aeron-whisper
+    repository: ghcr.io/raolivei/ollie-whisper
     tag: latest
     pullPolicy: IfNotPresent
   resources:
@@ -21,7 +21,7 @@ whisper:
 
 ollama:
   image:
-    repository: ghcr.io/raolivei/aeron-ollama
+    repository: ghcr.io/raolivei/ollie-ollama
     tag: latest
     pullPolicy: IfNotPresent
   resources:
@@ -36,7 +36,7 @@ ollama:
 
 tts:
   image:
-    repository: ghcr.io/raolivei/aeron-tts
+    repository: ghcr.io/raolivei/ollie-tts
     tag: latest
     pullPolicy: IfNotPresent
   resources:
@@ -49,7 +49,7 @@ tts:
 
 core:
   image:
-    repository: ghcr.io/raolivei/aeron-core
+    repository: ghcr.io/raolivei/ollie-core
     tag: latest
     pullPolicy: IfNotPresent
   resources:
@@ -62,7 +62,7 @@ core:
 
 ui:
   image:
-    repository: ghcr.io/raolivei/aeron-ui
+    repository: ghcr.io/raolivei/ollie-ui
     tag: latest
     pullPolicy: IfNotPresent
   resources:
@@ -79,7 +79,7 @@ ui:
 
 training:
   image:
-    repository: ghcr.io/raolivei/aeron-training
+    repository: ghcr.io/raolivei/ollie-training
     tag: latest
     pullPolicy: IfNotPresent
   schedule: "0 2 * * *" # Daily at 2 AM

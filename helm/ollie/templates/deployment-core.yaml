@@ -3,18 +3,18 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}-core
   labels:
-    app: aeron
+    app: ollie
     component: core
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: aeron
+      app: ollie
       component: core
   template:
     metadata:
       labels:
-        app: aeron
+        app: ollie
         component: core
     spec:
       containers:
@@ -48,7 +48,7 @@ metadata:
   name: core
 spec:
   selector:
-    app: aeron
+    app: ollie
     component: core
   ports:
     - protocol: TCP

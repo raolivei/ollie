@@ -3,18 +3,18 @@ kind: Deployment
 metadata:
   name: {{ .Release.Name }}-tts
   labels:
-    app: aeron
+    app: ollie
     component: tts
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: aeron
+      app: ollie
       component: tts
   template:
     metadata:
       labels:
-        app: aeron
+        app: ollie
         component: tts
     spec:
       containers:
@@ -32,7 +32,7 @@ metadata:
   name: tts
 spec:
   selector:
-    app: aeron
+    app: ollie
     component: tts
   ports:
     - protocol: TCP
