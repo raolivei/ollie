@@ -1,0 +1,68 @@
+[tool.poetry]
+name = "ollie"
+version = "0.1.0"
+description = "Local AI with total recall"
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+packages = [{include = "ollie", from = "src"}]
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.12"
+fastapi = "^0.111.0"
+uvicorn = "^0.30.1"
+python-multipart = "^0.0.9"
+requests = "^2.32.0"
+reflex = "^0.4.6"
+sqlmodel = "^0.0.16"
+alembic = "^1.13.1"
+openai = "^1.16.2"
+python-dotenv = "^1.0.1"
+psycopg2-binary = "^2.9.9"
+passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+pyjwt = "^2.8.0"
+bcrypt = "^4.1.2"
+email-validator = "^2.1.1"
+sentencepiece = "^0.1.99"
+protobuf = "^4.25.1"
+
+[tool.poetry.group.whisper.dependencies]
+faster-whisper = "^1.0.3"
+
+[tool.poetry.group.capture.dependencies]
+pyaudio = {version = "^0.2.14", optional = true}
+webrtcvad = "^2.0.10"
+
+[tool.poetry.group.tts.dependencies]
+TTS = "^0.22.0"
+
+[tool.poetry.group.core.dependencies]
+ollama = "^0.2.1"
+sqlalchemy = "^2.0.31"
+chromadb = "^0.5.3"
+sentence-transformers = "^3.0.1"
+
+[tool.poetry.group.ui.dependencies]
+streamlit = "^1.36.0"
+watchdog = "^4.0.1"
+
+[tool.poetry.group.training.dependencies]
+transformers = "^4.40.0"
+peft = "^0.10.0"
+trl = "^0.8.0"
+datasets = "^2.19.0"
+bitsandbytes = "^0.43.0"
+scipy = "^1.13.0"
+torch = "^2.3.0" 
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.2.2"
+ruff = "^0.4.10"
+black = "^24.4.2"
+mypy = "^1.10.0"
+isort = "^5.13.2"
+types-requests = "^2.32.0.20240602"
+types-sqlalchemy = "^1.4.53.38"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

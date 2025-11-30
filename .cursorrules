@@ -1,0 +1,28 @@
+# Aeron Project Rules
+
+## Model Preference
+- **PREFERRED MODEL**: `gemini-3-pro`
+- Use this model for all complex logic, planning, and code generation.
+
+## Tech Stack
+- Python 3.11+
+- Poetry
+- Docker
+- Kubernetes (Helm)
+- Streamlit
+- FastAPI
+- SQLAlchemy
+
+## Coding Standards
+- **Formatting**: Black, Isort
+- **Linting**: Ruff
+- **Typing**: Mypy (Strict)
+- **Tests**: Pytest
+- **Docstrings**: Google Style
+
+## Deployment
+- All services must have a Dockerfile in `docker/`.
+- All deployments must be managed via Helm in `helm/aeron/`.
+- Images must be tagged with semantic versioning.
+- Optimize for Raspberry Pi (ARM64) resources.
+
