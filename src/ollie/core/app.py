@@ -33,6 +33,10 @@ class ChatResponse(BaseModel):
     response: str
     audio_url: Optional[str] = None
 
+class SaveTranscriptionRequest(BaseModel):
+    transcript: str
+    session_id: Optional[int] = None
+
 async def process_audio_background(file_path: str, session_id: int):
     """Background task to transcribe and index audio."""
     async with httpx.AsyncClient() as client:
@@ -219,6 +223,49 @@ async def status():
         "model": model_version,
         "training_job": "Scheduled 2 AM"
     }
+
+@app.post("/save_streaming_transcription")
+async def save_streaming_transcription(req: SaveTranscriptionRequest):
+    """
+    Save a transcription from streaming session to the database and memory.
+    This endpoint is called by the frontend after a streaming session ends.
+    """
+    # Create session if needed
+    session_id = req.session_id
+    if not session_id:
+        with get_db() as db:
+            new_session = Session()
+            db.add(new_session)
+            db.commit()
+            session_id = new_session.id
+    
+    # Save to DB
+    with get_db() as db:
+        conv = Conversation(
+            session_id=session_id,
+            speaker="User",
+            transcript=req.transcript,
+            timestamp=datetime.utcnow()
+        )
+        db.add(conv)
+        db.commit()
+        db.refresh(conv)
+        conv_id = conv.id
+        
+    # Index in Memory
+    memory_system.add_memory(
+        text=req.transcript,
+        metadata={
+            "speaker": "User",
+            "session_id": session_id,
+            "timestamp": datetime.utcnow().isoformat(),
+            "type": "conversation",
+            "source": "streaming"
+        },
+        memory_id=f"conv_{conv_id}"
+    )
+    
+    return {"status": "saved", "session_id": session_id, "conversation_id": conv_id}
 
 @app.get("/health")
 def health():

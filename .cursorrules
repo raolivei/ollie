@@ -1,4 +1,16 @@
-# Aeron Project Rules
+# Ollie Project Rules
+
+## Workspace-Level Rules
+
+**IMPORTANT**: This project inherits workspace-level rules from `../.cursorrules`. 
+Key workspace rules include:
+- Git command restrictions (never run git at workspace root)
+- Branch workflow (separate branches for separate work)
+- CHANGELOG requirements
+- Helm chart best practices (see Deployment section below)
+- HTTPS security requirements
+
+For complete workspace conventions, see `../.cursorrules` and `../workspace-config/docs/PROJECT_CONVENTIONS.md`.
 
 ## Model Preference
 - **PREFERRED MODEL**: `gemini-3-pro`
@@ -22,7 +34,18 @@
 
 ## Deployment
 - All services must have a Dockerfile in `docker/`.
-- All deployments must be managed via Helm in `helm/aeron/`.
+- All deployments must be managed via Helm in `helm/ollie/`.
 - Images must be tagged with semantic versioning.
 - Optimize for Raspberry Pi (ARM64) resources.
+
+### Helm Charts
+
+**CRITICAL**: Always use existing Helm charts when possible. Before creating new Helm charts or Kubernetes manifests:
+
+1. **Search for existing charts** in the workspace (check `pi-fleet/helm/` and project-specific `helm/` directories)
+2. **Check official Helm repositories** for community-maintained charts (e.g., Bitnami, Artifact Hub)
+3. **Reuse and adapt** existing charts rather than creating new ones from scratch
+4. **Only create new charts** when no suitable existing chart can be found or adapted
+
+This reduces maintenance burden, leverages battle-tested configurations, and ensures consistency across deployments.
 
