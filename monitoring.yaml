@@ -1,0 +1,41 @@
+# Monitoring Configuration for Ollie
+# AI-powered personal assistant with voice, memory, and learning capabilities
+# Dashboard: https://grafana.eldertree.local/d/ollie-dashboard
+
+app:
+  name: "Ollie"
+  namespace: "ollie"
+  type: gpu-worker  # Uses Ollama for LLM inference
+
+  components:
+    # Core API - main orchestration service
+    core:
+      service: ollie-core
+      port: 8000
+      metrics: false
+
+    # Ollama LLM service
+    ollama:
+      service: ollie-ollama
+      port: 11434
+
+    # Text-to-Speech service
+    tts:
+      service: ollie-tts
+      port: 5000
+
+    # Whisper speech-to-text service
+    whisper:
+      service: ollie-whisper
+      port: 9000
+
+    # Frontend UI
+    ui:
+      service: ollie-ui
+      port: 3000
+
+  alerts:
+    cpu_threshold: 90
+    memory_threshold: 90
+    enabled: true
+    severity: warning
