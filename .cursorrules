@@ -1,51 +1,107 @@
-# Ollie Project Rules
+# Ollie - Cursor Rules
 
-## Workspace-Level Rules
+## Workspace
 
-**IMPORTANT**: This project inherits workspace-level rules from `../.cursorrules`. 
-Key workspace rules include:
-- Git command restrictions (never run git at workspace root)
-- Branch workflow (separate branches for separate work)
-- CHANGELOG requirements
-- Helm chart best practices (see Deployment section below)
-- HTTPS security requirements
+See `../workspace-config/docs/PROJECT_CONVENTIONS.md` for shared conventions (git workflow, CHANGELOG, Docker/GHCR, K8s, security).
 
-For complete workspace conventions, see `../.cursorrules` and `../workspace-config/docs/PROJECT_CONVENTIONS.md`.
+## Commands
 
-## Model Preference
-- **PREFERRED MODEL**: `gemini-3-pro`
-- Use this model for all complex logic, planning, and code generation.
+```bash
+# Development (Docker Compose)
+make up                                    # Start all services
+docker compose -f docker-compose.local.yml up whisper core frontend
 
-## Tech Stack
-- Python 3.11+
-- Poetry
-- Docker
-- Kubernetes (Helm)
-- Streamlit
-- FastAPI
-- SQLAlchemy
+# Individual services
+make dev-whisper                           # Start Whisper service
+make dev-core                              # Start Core API
 
-## Coding Standards
-- **Formatting**: Black, Isort
-- **Linting**: Ruff
-- **Typing**: Mypy (Strict)
-- **Tests**: Pytest
-- **Docstrings**: Google Style
+# Testing
+make test                                  # Run all tests
+make lint                                  # Run linters (ruff, black, isort)
+make format                                # Format code
 
-## Deployment
-- All services must have a Dockerfile in `docker/`.
-- All deployments must be managed via Helm in `helm/ollie/`.
-- Images must be tagged with semantic versioning.
-- Optimize for Raspberry Pi (ARM64) resources.
+# Linting (run after changes)
+ruff check . && ruff format .              # Python
+mypy src/                                  # Type check
+```
 
-### Helm Charts
+## Workflow
 
-**CRITICAL**: Always use existing Helm charts when possible. Before creating new Helm charts or Kubernetes manifests:
+1. Always lint/format after code changes (`make lint`)
+2. Run tests before committing (`make test`)
+3. Update CHANGELOG.md for all changes
+4. Never run git commands at workspace root
 
-1. **Search for existing charts** in the workspace (check `pi-fleet/helm/` and project-specific `helm/` directories)
-2. **Check official Helm repositories** for community-maintained charts (e.g., Bitnami, Artifact Hub)
-3. **Reuse and adapt** existing charts rather than creating new ones from scratch
-4. **Only create new charts** when no suitable existing chart can be found or adapted
+## Project Overview
 
-This reduces maintenance burden, leverages battle-tested configurations, and ensures consistency across deployments.
+Local AI assistant with total recall. Captures conversations, stores permanently, uses RAG-based memory retrieval. Runs on **eldertree** k3s cluster.
 
+```
+ollie/
+├── src/ollie/
+│   ├── core/            # Main API (FastAPI)
+│   ├── transcription/   # Whisper STT, streaming
+│   ├── llm/             # Ollama client
+│   ├── memory/          # RAG (ChromaDB, embeddings)
+│   ├── tts/             # Coqui TTS voice synthesis
+│   ├── storage/         # SQLite, SQLAlchemy models
+│   └── training/        # Model fine-tuning
+├── frontend/            # React real-time transcription UI
+├── docker/              # Dockerfiles per service
+├── helm/ollie/          # Helm chart for k8s
+└── scripts/             # Utility scripts
+```
+
+## Code Style
+
+**Python**: See `src/ollie/core/app.py` for FastAPI patterns, `src/ollie/memory/retrieval.py` for RAG patterns.
+
+**Tools**: Black + Isort (formatting), Ruff (linting), Mypy strict (typing), Pytest (tests), Google-style docstrings.
+
+## Tech Stack Specifics
+
+- **Transcription**: faster-whisper (real-time STT with rolling window)
+- **LLM**: Ollama running Llama 3.1 8B
+- **Memory**: ChromaDB + SentenceTransformers (RAG)
+- **TTS**: Coqui TTS for voice cloning
+- **UI**: React frontend for real-time transcription
+
+## Common Tasks
+
+### Adding Memory Feature
+
+1. Update embeddings in `src/ollie/memory/embeddings.py`
+2. Update retrieval logic in `src/ollie/memory/retrieval.py`
+3. Test with `scripts/test-memory-engine.py`
+
+### Adding API Endpoint
+
+1. Add route in `src/ollie/core/app.py`
+2. Add tests in `tests/`
+3. Update API docs
+
+## Docker Images
+
+All services have separate Dockerfiles in `docker/`:
+
+- `ghcr.io/raolivei/ollie-core:<tag>`
+- `ghcr.io/raolivei/ollie-whisper:<tag>`
+- `ghcr.io/raolivei/ollie-tts:<tag>`
+
+## Helm Deployment
+
+```bash
+# Deploy to eldertree
+helm upgrade --install ollie helm/ollie -n ollie
+
+# Check status
+kubectl get pods -n ollie
+```
+
+## Key Features
+
+- Real-time streaming transcription via WebSocket
+- Rolling window audio processing
+- RAG-based memory retrieval
+- Voice cloning for responses
+- Raspberry Pi optimized (ARM64)
