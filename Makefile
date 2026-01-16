@@ -1,4 +1,4 @@
-.PHONY: install test lint format clean build deploy
+.PHONY: install test lint format clean build deploy up down
 
 install:
 	poetry install
@@ -29,3 +29,9 @@ build:
 
 deploy:
 	helm upgrade --install ollie helm/ollie --namespace ollie --create-namespace
+
+up:
+	docker compose -f docker-compose.local.yml up -d whisper core frontend
+
+down:
+	docker compose -f docker-compose.local.yml down

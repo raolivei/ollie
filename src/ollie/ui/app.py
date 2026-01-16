@@ -22,10 +22,77 @@ if page == "Chat":
     # Chat interface
     if "messages" not in st.session_state:
         st.session_state.messages = []
+    if "editing_message_id" not in st.session_state:
+        st.session_state.editing_message_id = None
+    if "message_counter" not in st.session_state:
+        st.session_state.message_counter = 0
+    
+    # Ensure all existing messages have IDs (backward compatibility)
+    for idx, msg in enumerate(st.session_state.messages):
+        if "id" not in msg:
+            msg["id"] = f"msg_{st.session_state.message_counter}"
+            st.session_state.message_counter += 1
 
-    for msg in st.session_state.messages:
-        with st.chat_message(msg["role"]):
-            st.write(msg["content"])
+    # Initialize copy state
+    if "copy_trigger" not in st.session_state:
+        st.session_state.copy_trigger = None
+    if "copy_text" not in st.session_state:
+        st.session_state.copy_text = None
+
+    # Display messages with edit and copy buttons
+    for idx, msg in enumerate(st.session_state.messages):
+        msg_id = msg.get("id", f"msg_{idx}")
+        role = msg["role"]
+        content = msg["content"]
+        
+        with st.chat_message(role):
+            # Create columns for message content and buttons
+            col1, col2, col3 = st.columns([10, 1, 1])
+            
+            with col1:
+                # Show edit input if this message is being edited
+                if st.session_state.editing_message_id == msg_id and role == "user":
+                    edited_text = st.text_area(
+                        "Edit message:",
+                        value=content,
+                        key=f"edit_{msg_id}",
+                        height=100
+                    )
+                    save_col1, save_col2 = st.columns([1, 1])
+                    with save_col1:
+                        if st.button("💾 Save", key=f"save_{msg_id}"):
+                            # Update message content
+                            msg["content"] = edited_text
+                            # Find message index
+                            msg_idx = next((i for i, m in enumerate(st.session_state.messages) if m.get("id") == msg_id), None)
+                            if msg_idx is not None:
+                                # Remove all messages after this one
+                                st.session_state.messages = st.session_state.messages[:msg_idx + 1]
+                                # Clear editing state
+                                st.session_state.editing_message_id = None
+                                # Set flag to re-send the message
+                                st.session_state.pending_resend = edited_text
+                                st.rerun()
+                    with save_col2:
+                        if st.button("❌ Cancel", key=f"cancel_{msg_id}"):
+                            st.session_state.editing_message_id = None
+                            st.rerun()
+                else:
+                    st.write(content)
+            
+            with col2:
+                # Copy button for all messages
+                if st.button("📋", key=f"copy_{msg_id}", help="Copy message"):
+                    st.session_state.copy_trigger = msg_id
+                    st.session_state.copy_text = content
+                    st.rerun()
+            
+            with col3:
+                # Edit button only for user messages
+                if role == "user" and st.session_state.editing_message_id != msg_id:
+                    if st.button("✏️", key=f"edit_{msg_id}", help="Edit message"):
+                        st.session_state.editing_message_id = msg_id
+                        st.rerun()
 
     # Audio Input
     audio_value = st.audio_input("Record Voice")
@@ -50,7 +117,9 @@ if page == "Chat":
                 
                 # Automatically send to chat if not empty
                 if transcript.strip():
-                    st.session_state.messages.append({"role": "user", "content": transcript})
+                    msg_id = f"msg_{st.session_state.message_counter}"
+                    st.session_state.message_counter += 1
+                    st.session_state.messages.append({"role": "user", "content": transcript, "id": msg_id})
                     with st.chat_message("user"):
                         st.write(transcript)
                     
@@ -62,7 +131,9 @@ if page == "Chat":
                         if chat_resp.status_code == 200:
                             response_text = chat_resp.json()["response"]
                             message_placeholder.write(response_text)
-                            st.session_state.messages.append({"role": "assistant", "content": response_text})
+                            assistant_msg_id = f"msg_{st.session_state.message_counter}"
+                            st.session_state.message_counter += 1
+                            st.session_state.messages.append({"role": "assistant", "content": response_text, "id": assistant_msg_id})
                         else:
                             st.error("Chat Error")
             else:
@@ -71,11 +142,55 @@ if page == "Chat":
         except Exception as e:
             st.error(f"Error: {e}")
 
+    # Handle copy to clipboard
+    if st.session_state.copy_trigger and st.session_state.copy_text:
+        copy_text = st.session_state.copy_text
+        st.session_state.copy_trigger = None
+        
+        # Use JavaScript to copy to clipboard
+        copy_html = f"""
+        <script>
+        navigator.clipboard.writeText({repr(copy_text)}).then(function() {{
+            console.log('Copied to clipboard');
+        }}).catch(function(err) {{
+            console.error('Failed to copy:', err);
+        }});
+        </script>
+        """
+        st.components.v1.html(copy_html, height=0)
+        st.toast("Message copied to clipboard!", icon="✅")
+    
+    # Handle re-sending edited message
+    if "pending_resend" in st.session_state and st.session_state.pending_resend:
+        prompt = st.session_state.pending_resend
+        st.session_state.pending_resend = None
+        
+        # Call API to get response
+        try:
+            with st.chat_message("assistant"):
+                message_placeholder = st.empty()
+                
+                resp = requests.post(f"{API_URL}/chat", json={"message": prompt})
+                if resp.status_code == 200:
+                    data = resp.json()
+                    full_response = data["response"]
+                    message_placeholder.write(full_response)
+                    assistant_msg_id = f"msg_{st.session_state.message_counter}"
+                    st.session_state.message_counter += 1
+                    st.session_state.messages.append({"role": "assistant", "content": full_response, "id": assistant_msg_id})
+                else:
+                    st.error(f"Error: {resp.status_code} - {resp.text}")
+            
+        except Exception as e:
+            st.error(f"Error communicating with Ollie Core: {e}")
+
     # Input
     prompt = st.chat_input("Say something...")
     if prompt:
         # Add user message
-        st.session_state.messages.append({"role": "user", "content": prompt})
+        msg_id = f"msg_{st.session_state.message_counter}"
+        st.session_state.message_counter += 1
+        st.session_state.messages.append({"role": "user", "content": prompt, "id": msg_id})
         with st.chat_message("user"):
             st.write(prompt)
         
@@ -95,7 +210,9 @@ if page == "Chat":
                     data = resp.json()
                     full_response = data["response"]
                     message_placeholder.write(full_response)
-                    st.session_state.messages.append({"role": "assistant", "content": full_response})
+                    assistant_msg_id = f"msg_{st.session_state.message_counter}"
+                    st.session_state.message_counter += 1
+                    st.session_state.messages.append({"role": "assistant", "content": full_response, "id": assistant_msg_id})
                 else:
                      st.error(f"Error: {resp.status_code} - {resp.text}")
                 
@@ -172,7 +289,11 @@ elif page == "Voice":
                             if st.button("💬 Send to Chat", key="send_to_chat"):
                                 if "messages" not in st.session_state:
                                     st.session_state.messages = []
-                                st.session_state.messages.append({"role": "user", "content": transcript})
+                                if "message_counter" not in st.session_state:
+                                    st.session_state.message_counter = 0
+                                msg_id = f"msg_{st.session_state.message_counter}"
+                                st.session_state.message_counter += 1
+                                st.session_state.messages.append({"role": "user", "content": transcript, "id": msg_id})
                                 st.info("Message added to chat! Switch to Chat tab to see the conversation.")
                     else:
                         st.error(f"Transcription failed: {transcribe_resp.status_code}")
